@@ -64,7 +64,7 @@ const Index: React.FC = () => {
               <ul>
                 <li>Código do IBGE: {addres.cidade_info.codigo_ibge}</li>
                 <li>Área em km²: {addres.cidade_info.area_km2}</li>
-                  <li> CEP: {addres.cep}</li>
+                <li> CEP: {addres.cep}</li>
               </ul>
             </div>
           </Link>
