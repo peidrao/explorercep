@@ -20,7 +20,7 @@ Uma aplicação simples para captação de algumas informações referentes a um
 
 ## Aplicação
 
-![Imagem](./images/app.gif)
+![Imagem](.images/app.gif)
 
 ## API
 
