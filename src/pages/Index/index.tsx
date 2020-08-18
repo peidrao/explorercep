@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
 
-import { Title, Form, Properties } from './styles';
+import { Title, Form, Properties, Error } from './styles';
 
 interface Address {
   cidade: string;
@@ -14,11 +14,13 @@ interface Address {
 }
 
 const Index: React.FC = () => {
+  const [inputError, setInputError] = useState('');
   const [newAddress, setNewAdress] = useState('');
   const [address, setAddress] = useState<Address[]>(() => {
     const storageAddress = localStorage.getItem('@Address:address');
-
-    if (storageAddress) return JSON.parse(storageAddress);
+    if (storageAddress) {
+      return JSON.parse(storageAddress);
+    }
 
     return [];
   });
@@ -32,20 +34,26 @@ const Index: React.FC = () => {
   ): Promise<void> {
     event.preventDefault();
 
-    if (!newAddress) return;
+    if (!newAddress) {
+      setInputError('Digite o CEP');
+      return;
+    }
 
     try {
       const response = await api.get<Address>(`/${newAddress}`);
       const addres = response.data;
       setAddress([...address, addres]);
       setNewAdress('');
-    } catch (err) {}
+      //setInputError('');
+    } catch (err) {
+      setInputError('CEP inválido ou não existe');
+    }
   }
 
   return (
     <>
       <Title>Explore cidades pelo CEP</Title>
-      <Form onSubmit={handleAddAddress}>
+      <Form hasError={!!inputError} onSubmit={handleAddAddress}>
         <input
           placeholder="Digite o CEP"
           value={newAddress}
@@ -53,7 +61,7 @@ const Index: React.FC = () => {
         />
         <button type="submit">Pesquisar</button>
       </Form>
-
+      {inputError && <Error> {inputError}</Error>}
       <Properties>
         {address.map(addres => (
           <Link key={addres.cidade_info.codigo_ibge} to={`/${addres.cep}`}>
